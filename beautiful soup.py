@@ -55,7 +55,7 @@ def countTerms(someList):
 #
 def formatJSON(someSite,someDict):
     jsonObj = {someSite:someDict}
-    jsonFile = open('json files/'+someSite+'.json','w')
+    jsonFile = open('../json files/'+someSite+'.json','w')
     json.dump(jsonObj,jsonFile)
     jsonFile.close()
     return jsonObj
