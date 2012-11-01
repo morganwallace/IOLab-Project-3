@@ -6,6 +6,7 @@ from urllib.request import urlopen
 import re
 import json
 import cgitb
+import os
 cgitb.enable()
 
 
@@ -55,6 +56,8 @@ def countTerms(someList):
 #
 def formatJSON(someSite,someDict):
     jsonObj = {someSite:someDict}
+    if not os.path.exists('../json files'):
+        os.makedirs('../json files')#adds folder one level up to save json files if it doesn't already exist
     jsonFile = open('../json files/'+someSite+'.json','w')
     json.dump(jsonObj,jsonFile)
     jsonFile.close()
