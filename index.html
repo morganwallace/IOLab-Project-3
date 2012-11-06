@@ -1,0 +1,63 @@
+<!DOCTYPE>
+<html>
+
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script type="text/javascript" src="js/data.js"></script>
+	<script type="text/javascript">
+
+		var obamaWord = encodeURI('obama');
+		var romneyWord = encodeURI('romney');
+		var apikey = "306130e5a7d6f0b4714376d82431370dcef52c88";
+		var baseUrl = "http://access.alchemyapi.com/calls/text/TextGetTargetedSentiment";
+		var callingUrl = baseUrl + '?apikey=' + apikey;
+		var obamaText = encodeURI(obama.sentences);
+		var romneyText = encodeURI(romney.sentences);
+
+		$(document).ready(function() {
+		  // send off the query
+		  $.ajax({
+		    url: callingUrl+'&text='+obamaText +'&target='+obamaWord+'&outputMode=json&jsonp=callObama',
+		    dataType: "jsonp",
+		    success: callObama
+		  });
+		  $.ajax({
+		    url: callingUrl+'&text='+romneyText +'&target='+romneyWord+'&outputMode=json&jsonp=callRomney',
+		    dataType: "jsonp",
+		    success: callRomney
+		  });
+		});
+
+		function callObama(data) {
+			$('#oScore').append(data.docSentiment.score);
+			}
+		function callRomney(data) {
+			$('#rScore').append(data.docSentiment.score);
+			}
+
+    </script>
+
+</head>
+
+<body>
+
+	<div id="container">
+		<h1>Post debate scores</h1>
+	</div>
+
+	<div id="obamaSection">
+		<h2>Obama Score</h1>
+		<div id="oScore">
+		</div>
+
+	</div>
+
+	<div id="romneySection">
+		<h2>Romney Score</h2>
+		<div id="rScore">
+		</div>
+	</div>
+	
+</body>
+
+</html>
