@@ -1,6 +1,7 @@
 #!/usr/local/bin/python
 ###Sorts through all the websites for terms
 
+
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 import re
@@ -75,7 +76,7 @@ def formatJSON(someSite,someDict):
 
 def get(name, term):
     return siteTerms[name][term]
-    
+
 def main():
     #instructions
     print("""
@@ -86,11 +87,12 @@ def main():
     """)
     
     URL = addurl()
+    print(URL);
     siteID= URL[1]
     siteTerms[siteID] = countTerms(saveTerms(getHomePageText(URL[0])))
     formatJSON(siteID,siteTerms[siteID])
     #print(siteTerms[siteID])
-    
+
 
 
 if __name__ == "__main__": main()
