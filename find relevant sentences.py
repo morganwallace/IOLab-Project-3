@@ -4,51 +4,51 @@ import json
 import os
 
 article = input("paste the language of the article here: ")
+article =  article.encode('utf-8')
+article.replace(r'\\u2014','')
+article =  article.encode('ascii')
+pubNo = input('what is the puclication number? ')
 source = input("Newspaper: ")
 debateNo = input("Debate number: ")
 URL = input("url: ")
+
 obamaSentences= []
 romneySentences= []
 
+
 #find sentences with obama or romney in it
 def findInSentences(articleText):
+    obamaSaid = ''
+    romneySaid = ''
     allSentences=articleText.split('.')
     for i in article.split('.'):
         if 'Romney' in i:
-            i.strip('\\')
-            i.strip('\n')#remove whitespace
+            i.replace('-','')
+            i.replace('\\n','')#remove whitespace
+            i.replace('\\t','')#remove whitespace            
+            i.replace('\\','')
             romneySentences.append(i)
         if 'Obama' in i:
-            i.strip('\\')
-            i.strip('\n')#remove whitespace
+            i.replace('-','')
+            i.replace('\\n','')#remove whitespace
+            i.replace('\\t','')#remove whitespace            
+            i.replace('\\','')
             obamaSentences.append(i)
+    for sentence in romneySentences: romneySaid+=". " + sentence
+    romneySaid = romneySaid[1:]
+    for sentence in obamaSentences: obamaSaid+=". " + sentence
+    obamaSaid = obamaSaid[1:]
+    return romneySaid, obamaSaid
     
 #Export for sentiment analysis
-def formatJSON(sentences,fileName,URL):
-    jsonObj = {"sentences":str(sentences)[1:-1],'source':URL}
-    jsonFile = open(fileName,'w')#saves file outside of github repo        
-    json.dump(jsonObj,jsonFile)
-    jsonFile.close()
-    print('Saved here:',fileName)
-    return jsonObj
-
-def naming(fileName):
-    fileName +='.json'#give extension
-    fileName = os.path.join('JSON',fileName)#put in folder called 'JSON'
-    counter = 0
-    while os.path.exists(fileName):
-        counter+=1
-        if counter<=1:
-            fileName=fileName[:-5]+"("+str(counter)+")"+fileName[-5:]
-        else:
-            fileName[-7]=str(counter)
-    return fileName
+def saveJSON(url,pubName,obamaSentences,romneySentences,publicationNo,debateNo):
+    jsFile = open('data.js','a')
+    jsFile.write(('var p'+publicationNo+'d'+debateNo+' = {"source": '+pubName+', "Osentences": '+obamaSentences+', "Rsentences": '+romneySentences+'}\n\n').encode('ascii'))
+    jsFile.close()
 
 
 def main():
-    findInSentences(article)
-    if obamaSentences: #if there were mentions of Obama
-        formatJSON(obamaSentences,naming('Obama, '+source+" - debate no "+debateNo),URL)
-    if romneySentences:#if there were mentions of Romney
-        formatJSON(romneySentences,naming('Romney, '+source+" - debate no "+debateNo),URL)
+    romneySaid = findInSentences(article)[0]
+    obamaSaid = findInSentences(article)[1]
+    saveJSON(URL,source,obamaSaid,romneySaid,pubNo,debateNo)
 main()
