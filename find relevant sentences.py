@@ -5,7 +5,7 @@ import os
 
 article = input("paste the language of the article here: ")
 article =  article.encode('utf-8')
-article.replace(r'\\u2014','')
+article.replace(r'\u2014','')
 article =  article.encode('ascii')
 pubNo = input('what is the puclication number? ')
 source = input("Newspaper: ")
