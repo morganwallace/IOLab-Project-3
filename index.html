@@ -6,34 +6,106 @@
 	<script type="text/javascript" src="js/data.js"></script>
 	<script type="text/javascript">
 
-		var obamaWord = encodeURI('obama');
-		var romneyWord = encodeURI('romney');
-		var apikey = "306130e5a7d6f0b4714376d82431370dcef52c88";
-		var baseUrl = "http://access.alchemyapi.com/calls/text/TextGetTargetedSentiment";
-		var callingUrl = baseUrl + '?apikey=' + apikey;
-		var obamaText = encodeURI(obama.sentences);
-		var romneyText = encodeURI(romney.sentences);
+	var obamaWord = encodeURI('obama');
+	var romneyWord = encodeURI('romney');
+	var apikey = "e9c77f7fbed2e40b967e963b31c1758da8822ba9";
+	var baseUrl = "http://access.alchemyapi.com/calls/url/URLGetTargetedSentiment";
+	var callingUrl = baseUrl + '?apikey=' + apikey;
+	//var allJsons = [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17, s18, s19, s20, s22, s23, s24, s25, s26, s27, s28, s29, s30, s31, s32, s33, s34, s35, s36, s37, s38, s39, s40, s41, s42, s43, s44]
+	var allJsons = [s1, s2]
+	var Oscores = [];
+	
+	var jsonO = {};
+	var jsonR = {};
+
 
 		$(document).ready(function() {
-		  // send off the query
-		  $.ajax({
-		    url: callingUrl+'&text='+obamaText +'&target='+obamaWord+'&outputMode=json&jsonp=callObama',
-		    dataType: "jsonp",
-		    success: callObama
-		  });
-		  $.ajax({
-		    url: callingUrl+'&text='+romneyText +'&target='+romneyWord+'&outputMode=json&jsonp=callRomney',
-		    dataType: "jsonp",
-		    success: callRomney
-		  });
+
+
+
+			for (var i = 0; i < allJsons.length; i++) {
+				
+				makeOcall(allJsons[i]);
+				makeRcall(allJsons[i]);
+
+			}
+
+			setTimeout(function() { 
+			   DownloadJSON2CSV(allJsons);;
+			}, 20000);
+
+			
+
+
 		});
 
-		function callObama(data) {
-			$('#oScore').append(data.docSentiment.score);
-			}
+		function makeOcall(theJson){
+				  parseURL = encodeURI(theJson.url);
+				  $.ajax({
+				    url: callingUrl+'&url='+parseURL +'&target='+obamaWord+'&outputMode=json&jsonp=callObama',
+				    dataType: "jsonp",
+				    async: false
+				  });
+		}
+
+        function callObama(data) {
+        			for (var i = 0; i < allJsons.length; i++) {
+							if (data.url === allJsons[i].url){
+								allJsons[i].Oscore = data.docSentiment.score;
+							}
+						}
+					
+					}
+
+		function makeRcall(theJson){
+				  parseURL = encodeURI(theJson.url);
+				  $.ajax({
+				    url: callingUrl+'&url='+parseURL +'&target='+romneyWord+'&outputMode=json&jsonp=callRomney',
+				    dataType: "jsonp",
+				    async: false
+				  });
+
+		}	
+
+
 		function callRomney(data) {
-			$('#rScore').append(data.docSentiment.score);
+        			for (var i = 0; i < allJsons.length; i++) {
+							if (data.url === allJsons[i].url){
+								allJsons[i].Rscore = data.docSentiment.score;
+							}
+						}
 			}
+
+		function DownloadJSON2CSV(objArray) {
+			    console.log(objArray);
+			    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+			    console.log(array);
+
+			    var str = '';
+
+			    for (var i = 0; i < array.length; i++) {
+			        var line = '';
+			        //console.log(array[i])
+			        $(array[i]).each(function(index) {
+
+			            line += this.publication + ',' + this.date + ',' + 'obama' + ',' + this.Oscore ;
+
+
+			        });
+			        str += line + '\r\n';
+			        line = '';
+			        $(array[i]).each(function(index) {
+
+			            line += this.publication + ',' + this.date + ',' + 'romney' + ',' + this.Rscore ;
+
+
+			        });
+			        str += line + '\r\n';
+			    }              
+			    console.log(str);
+			    window.open( "data:text/csv;charset=utf-8," + escape(str))
+
+		}
 
     </script>
 
