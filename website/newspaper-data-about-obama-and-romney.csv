@@ -1,0 +1,25 @@
+newspaper,date,candidate,scores,color
+SFgate,20121003,Obama,2.3,008f7e
+SFgate,20121003,Romney,1.3,008f7e
+SFgate,20121016,Obama,2.1,008f7e
+SFgate,20121016,Romney,1.1,008f7e
+SFgate,20121022,Obama,1.5,008f7e
+SFgate,20121022,Romney,0.5,008f7e
+NewYorkTimes,20121003,Obama,-1.3,003263
+NewYorkTimes,20121003,Romney,-2.3,003263
+NewYorkTimes,20121016,Obama,4.3,003263
+NewYorkTimes,20121016,Romney,3.3,003263
+NewYorkTimes,20121022,Obama,2.3,003263
+NewYorkTimes,20121022,Romney,1.3,003263
+Chicago Tribune,20121003,Obama,2.2,ef3125
+Chicago Tribune,20121003,Romney,1.2,ef3125
+Chicago Tribune,20121016,Obama,1.1,ef3125
+Chicago Tribune,20121016,Romney,0.1,ef3125
+Chicago Tribune,20121022,Obama,3.1,ef3125
+Chicago Tribune,20121022,Romney,2.1,ef3125
+Los Angeles Times,20121003,Obama,4.1,ed1c24
+Los Angeles Times,20121003,Romney,3.1,ed1c24
+Los Angeles Times,20121016,Obama,2.3,ed1c24
+Los Angeles Times,20121016,Romney,1.3,ed1c24
+Los Angeles Times,20121022,Obama,4.2,ed1c24
+Los Angeles Times,20121022,Romney,3.2,ed1c24

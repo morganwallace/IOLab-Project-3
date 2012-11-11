@@ -1,0 +1,219 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+body{
+	text-align:center;
+	height: 100%;
+	font: 15px "Times New Roman", "Lucida Grande", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, p { margin-top: 0;}
+fieldset,img { border: 0; }
+li { list-style: none; }
+
+#header {
+	width: 1024px;
+	padding: 0 auto;
+	margin:0 auto;
+	position: relative;
+	height: 170px;
+}
+#header-inner {
+	margin: 0 auto;
+	position: relative;
+	background-image:url('../img/title.png');
+	height:170px;
+}
+
+#header-top-line{
+	height:2px;
+	margin-top:5px;
+	background: black;
+}
+#header-bottom-line{
+	height:7px;
+	margin-top:25px;
+	background: #1e5799; /* Old browsers */
+	background: -moz-linear-gradient(left,  #1e5799 0%, #2989d8 18%, #ff2828 84%, #ff2828 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,#1e5799), color-stop(18%,#2989d8), color-stop(84%,#ff2828), color-stop(100%,#ff2828)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(left,  #1e5799 0%,#2989d8 18%,#ff2828 84%,#ff2828 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(left,  #1e5799 0%,#2989d8 18%,#ff2828 84%,#ff2828 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left,  #1e5799 0%,#2989d8 18%,#ff2828 84%,#ff2828 100%); /* IE10+ */
+	background: linear-gradient(to right,  #1e5799 0%,#2989d8 18%,#ff2828 84%,#ff2828 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#ff2828',GradientType=1 ); /* IE6-9 */
+}
+#header-credit{
+	float:left;
+	padding:0;
+	padding-top:5px;
+}
+#header-date{
+	float:left;
+	padding-top:5px;
+	padding-left:270px;
+}
+#header-url{
+	float:right;
+	padding-top:5px;
+
+}
+#content-heading{
+	width:1024px;
+	float:left;
+	font-size:28px;
+	margin:0 auto;
+	padding-top: 20px;
+	padding-bottom:20px;
+}
+h1 {
+	font: 50px;
+	padding-top:30px;
+	color: #000;
+}
+
+h2 {
+	margin:0 auto;
+}
+
+button {
+	margin: 2px 2px 10px 0;
+}
+
+#content {
+	width: 1024px;
+	margin:0 auto;
+	padding: 10px 5px 0px 5px;
+	background: white;
+}
+
+.center-container {
+	margin: 0 auto;
+	position: relative;
+}
+
+#graph {
+	margin:0 auto;
+	width:768px;
+	float: left;
+}
+#newspaper {
+	width: 256px;
+	float:right;
+}
+
+.infobox {
+	font-size: 20px;
+	width: 400px;
+    height: 30px;
+    background-color: transparent; /*rgba(255,255,255,.85);*/
+    /*border: 2px solid #999;*/
+    /*display:none;*/
+}
+
+.infobox p {
+	margin: 0 auto;
+}
+
+#footer {
+	padding: 15px 10px;
+	color: #999;
+}
+
+a { 
+	color: #ddd;
+	text-decoration: none;
+	padding: 2px;
+}
+
+a:hover {
+	color: #3B8DBD;
+}
+
+#source { float: left; margin-left: 85px;}
+#credit { float: right;}
+
+/*-------D3 CSS-----------*/
+path.line {
+	fill: none;
+	stroke-width: 1.5px;
+}
+
+.axis {
+	shape-rendering: crispEdges;
+}
+
+.axisText{
+	fill: #777;
+	font-size: 14px;
+}
+
+.x.axis line {
+	stroke: #fff;
+}
+
+.x.axis .minor {
+	stroke-opacity: .5;
+}
+
+.x.axis path {
+	display: none;
+}
+
+.y.axis line, .y.axis path {
+	fill: none;
+	stroke: #000;
+}
+
+.rules line, .rules path {
+	shape-rendering: crispEdges;
+	stroke: #000;
+}
+
+.rules .tick {
+}
+.rules .minor {
+  	stroke: #BBB;
+}
+.rules .domain {
+  	fill: none;
+}
+
+.grid .tick {
+  	stroke: #bbb;
+}
+
+.grid .minor{
+	stroke: #ccc;
+	stroke-opacity: 0.5;
+}
+
+
+/*CHECKLIST*/
+
+.checklist {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	text-align:left;
+} 
+.checklist li {
+	font-size: 20px;
+	position: relative;
+	float:left;
+}
+li .title{
+	font-weight:bold;
+}
+.hover{
+	text-decoration:underline;
+}	
+.checklist li span.selected {
+	background-color:#FFFF66;
+}
+.checklist li input {
+	display: none;
+}
+
+

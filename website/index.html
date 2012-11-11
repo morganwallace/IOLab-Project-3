@@ -1,0 +1,321 @@
+<!--
+ * since 2012/11/10 
+ *
+ * Using
+ * - D3 library for visualization - http://d3js.org/
+ * - refer to http://thegilby.com/projects/sfo/demo/
+ *
+ * Tested on 
+ *	- Google Chrome 21.0.1180.89
+ *	- FireFox 14.0.1
+ *
+-->
+
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset="UTF-8">
+  <title>Sentiments of Newspapers</title>
+  <meta name="author" content="Bharath, Chan, Morgan">
+  <link rel="shortcut icon" href="img/favicon.ico"/>
+  <script type="text/javascript" src="js/d3.v2.js"></script>
+  <script type="text/javascript" src="js/jquery-1.7.1.js"></script>
+  <script type="text/javascript" src="js/underscore.js"></script>
+  <script type="text/javascript" src="js/helper.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <script type="text/javascript">
+    $(function(){
+
+        var m = [30, 20, 50, 120], //margins (t, r, b, l)
+            w = 768 - m[1] - m[3],
+            h = 420 - m[0] - m[2];
+		var  parse = d3.time.format("%Y%m%d").parse;
+
+        // Scales and axes
+        var x = d3.time.scale().range([0, w]),
+            y = d3.scale.linear().range([h, 0]),
+            xAxis = d3.svg.axis().scale(x).tickValues([parse("20121003"),parse("20121016"),parse("20121022")]),
+            yAxis = d3.svg.axis().scale(y).ticks(7).orient("left");
+
+        // A line generator
+        var line = d3.svg.line()
+            .x(function(d) { return	x(d.date); })
+            .y(function(d) { return y(d.scores); });
+
+		d3.csv("newspaper-data-about-obama-and-romney.csv", function(data) { //load the data
+          var maxScore = [10]; //array of highest Score values
+          var minScore = [-10];
+          var minDate = parse("20121001");
+          var maxDate = parse("20121023");
+
+          // Add an SVG element with the desired dimensions and margins
+          var svg = d3.select("#graph").append("svg:svg")
+              .attr("width", w + m[1] + m[3])
+              .attr("height", h + m[0] + m[2])
+              .append("svg:g")
+              .attr("transform", "translate(" + m[3] + "," + m[0] + ")");
+
+          // Compute the minimum and maximum date, and the maximum scores
+          x.domain([minDate, maxDate]);
+          y.domain([d3.min(minScore), d3.max(maxScore)]).nice();
+
+          // Add the x-axis.
+          svg.append("svg:g")
+              .attr("class", "x axis")
+              .attr("transform", "translate(0," + h + ")")
+              .call(xAxis);
+
+          // Add the y-axis.
+          svg.append("svg:g")
+              .attr("class", "y axis")
+              .call(yAxis);
+
+          // Add grid lines
+          var rules = svg.append("svg:g").classed("rules", true)
+			
+		  rules.append("svg:g").classed("grid x_grid", true)
+              .attr("transform", "translate(0,"+h+")")
+              .call(
+		         d3.svg.axis().scale(x).tickValues([parse("20121003"),parse("20121016"),parse("20121022")])
+                .tickSize(-h,-h,0)
+                .tickFormat("")
+              )
+
+		  // Add the x-axis label
+          svg.append("svg:text")
+            .attr("class", "axisText")
+            .text("Debate Date")
+            .attr("x", w/2)
+            .attr("y", h)
+            .attr("dy","2.4em")
+            .style("text-anchor","middle");
+
+          // add y-axis label
+          svg.append("svg:text")
+            .attr("class", "axisText")
+            .text("Sentiment Score")
+            .style("text-anchor","middle")
+            .attr("transform","translate(" + -75 + " " + h/2+") rotate(-90)");
+
+          var newspapers = {"SFgate":"sfgate",
+                          "NewYorkTimes":"newyorktimes",
+                          "Chicago Tribune":"chicago-tribune",
+                          "Los Angeles Times":"los-angeles-times",
+          };
+          var description = {"SFgate":"Daily newspaper for the greater San Francisco area.",
+                          "NewYorkTimes":"Breaking news, multimedia, reviews & opinion on Washington.",
+                          "Chicago Tribune":"Breaking news, sports, business, entertainment, weather and traffic for Chicago.",
+                          "Los Angeles Times":"The Los Angeles Times is a leading source of news on Southern California.",
+          };
+		  
+          //Display list of newspapers 
+          $('<ul class="checklist">').appendTo('#newspaper'); //create a list
+          $.each(d3.keys(newspapers), function(i){
+              newspaperName = this;
+              newspaperAbbrev = newspapers[this];
+			  newspaperDescription =description[this];
+              $('<li class="newspapersItem" id="'+newspaperName+'"><span class="title">'+newspaperName+'</span><span class="description">     -'+newspaperDescription+'</span></li>').appendTo('.checklist');
+          });
+
+		 //Mouse event on list
+		 $(".checklist li").live('mouseover', function() {
+				$(this).children('.title').addClass('hover');
+		 });
+		 $(".checklist li").live('mouseout', function() {
+				$(this).children('.title').removeClass('hover');
+		 });
+		$(".checklist li").live('click', function() {
+			if ($(this).children('.title').hasClass('selected')){
+				$(this).children('.title').removeClass('selected');
+				removeNewspapers(this.id);
+			}
+			else {
+				$(this).children('.title').addClass('selected');
+				$(this).trigger("change");
+			}
+		});
+          //Change when list clicked
+          $("li[class=newspapersItem]").bind('change', newspapersChange);
+          
+          //callback function for when list clicked
+          function newspapersChange() { 
+		    console.log(this.id);
+            var newspapersName = this.id;
+
+			if(this) {
+              var values = filterNewspapers(newspapersName);
+              var maxYcurr = d3.max(maxScore); //current max Y in maxScore
+              var maxY = d3.max(values, function(d) { return d.scores; })
+              maxScore.push(maxY);
+              console.log(maxScore);
+
+              if (maxY > maxYcurr) { //if the new maxY is higher than the current maximum Y value
+                  console.log("GROW!!");
+                  y.domain([minScore, maxScore]).nice();
+                  var t = svg.transition().duration(750);
+                  t.select(".y.axis").call(yAxis);
+
+                  $(".selected").each( 
+                    function() { 
+                       if (this.value == newspapersName) {
+                          addNewspapers(newspapersName);
+                       } else {
+                          d3.select("path#"+newspaper[this.value])
+                          .transition(750)
+                          .attr("d", line(filterNewspapers(this.value)));
+                       }
+                    });
+              } else {
+                  addNewspapers(newspapersName);  
+              } 
+            } else {
+              var maxY = Math.max(svg.select("#"+newspapers[newspapersName]+"-Obama").attr("maxY"),svg.select("#"+newspapers[newspapersName]+"-romney").attr("maxY") )
+              arrayRemoveItem(maxScore, maxY); //remove maxY from maxScore
+              console.log(maxScore);
+              var maxYcurr = d3.max(maxScore); //current max Y in maxScore
+
+              if (maxY > maxYcurr) { //if the old maxY was higher than the current maximum Y value
+                  console.log("SHRINK!!");
+                  y.domain([-5, maxYcurr]).nice();
+                  var t = svg.transition().duration(750);
+                      t.select(".y.axis").call(yAxis);
+                  //remove newspapers
+                  removeNewspapers(newspapersName);
+                  //refresh lines
+                  $(".selected").each(function() { 
+                        d3.select("path#"+newspapers[this.value])
+                          .transition(750)
+                          .attr("d", line(filterNewspapers(this.value)));
+                    });
+              } else {
+                removeNewspapers(newspapersName);  
+              }
+            }
+          }
+
+          function filterNewspapers(name) {
+               // Filter to one newspapers;
+              var values = data.filter(function(d) {
+                return d.newspaper == name;
+              });
+              // Parse dates and numbers. 
+              values.forEach(function(d) {
+                d.date = _.isDate(d.date) ? d.date : parse(d.date);
+				d.candidate = d.candidate;
+                d.scores = +d.scores;
+                d.color = d.color;
+              });
+
+              return values;
+          }
+
+          function addNewspapers(name) {
+              console.log("ADD!");
+               // Filter to one newspapers;
+              var values = filterNewspapers(name);
+			  var O_values =[];
+			  var R_values =[];
+			  for (var i in values){
+				 if (values[i].candidate ==="Obama" ){
+					O_values.push(values[i]);
+				 }
+				 else if (values[i].candidate ==="Romney"){
+					R_values.push(values[i]);
+				 }
+			  }
+			  console.log(values, O_values, R_values);
+              var maxY = d3.max(values, function(d) { return d.scores; });
+				
+              // Add the line path of Obama
+              svg.append("svg:path")
+                  .attr("class", "line")
+                  .attr("id",newspapers[name]+"-Obama")
+                  .attr("name", name)
+                  .attr("d", line(O_values))
+                  .attr("values", O_values)
+                  .attr("maxY", maxY)
+                  .attr("color","steelblue")
+                  .style("stroke", "#"+O_values[0].color)
+                  .on("mouseover", lineMouseOver)
+                  .on("mouseout", lineMouseOut)
+                  .transition(500)
+                  .style("stroke-opacity", 1);
+			  // Add the line path of Romney
+              svg.append("svg:path")
+                  .attr("class", "line")
+                  .attr("id",newspapers[name]+"-Romney")
+                  .attr("name", name)
+                  .attr("d", line(R_values))
+                  .attr("values", R_values)
+                  .attr("maxY", maxY)
+                  .attr("stroke-dasharray", "5.5") //dashed line
+                  .attr("color","#"+R_values[0].color)
+                  .style("stroke", "#"+R_values[0].color)
+                  .on("mouseover", lineMouseOver)
+                  .on("mouseout", lineMouseOut)
+                  .transition(500)
+                  .style("stroke-opacity", 1);
+	      }
+          function removeNewspapers(name) {
+              svg.select("#"+newspapers[name]+"-Obama").transition(500).style("stroke-opacity", 0).remove(); //remove line
+              svg.select("#"+newspapers[name]+"-Romney").transition(500).style("stroke-opacity", 0).remove(); //remove line
+          }
+
+          function lineMouseOver(){
+              d3.selectAll("path.line").transition(50).style("stroke-opacity", "0.2");
+              var line = d3.select(this);
+              line.transition().style("stroke-opacity","1").style("stroke-width", 3);
+			 
+              //infobox 
+			  if (line.attr("stroke-dasharray") !="5.5"){ //obama
+				  d3.select("span#newspapers").html("Obama Sentiment Score in '"+line.attr("name")+"'").transition(50)
+				  .style("opacity", "1")
+				  .style("color","#2554C7");
+				  d3.select(".infobox p").transition(50).style("opacity", "1");
+			   }
+			   else { //romney
+				  d3.select("span#newspapers").html("Romney Sentiment Score in '"+line.attr("name")+"'").transition(50)
+				  .style("opacity", "1")
+				  .style("color","#E42217");
+				  d3.select(".infobox p").transition(50).style("opacity", "1");			   
+			   }              
+          }
+
+          function lineMouseOut(){
+              var line = d3.select(this);
+              line.style("stroke-width", 1.5);
+              d3.selectAll("path.line").transition(50).style("stroke-opacity", "1");
+              d3.select(".infobox p").transition(50).style("opacity", "0");
+          }
+        }); //.csv 
+    });
+  </script>
+</head>
+<body>
+  <div id="header">
+    <div id="header-inner"></div>
+	<div id="header-top-line"></div>
+	<div id="header-credit">&#169;  Bharath, Chan, Morgan</div>
+	<div id="header-date">WEDNESDAY, NOVEMBER 14, 2012</div>
+	<div id="header-url">Bit.ly/SentimentTimes</div>
+	<div id="header-bottom-line"></div>
+  </div>
+  <div id="content">
+	 <div id="content-heading">
+		  <h2>Sentiment of Newpapers towards Obama and Romney </h2>
+	 </div>
+	 <div class="content-center">
+		<div id="graph">
+         <div class="infobox">
+          <p>
+            <span id="newspapers"></span>
+            <span id="newspapersScore"></span>
+          </p>
+        </div> <!--infobox-->
+      </div> <!--graph-->    
+      <div id="newspaper"></div>  
+  </div> <!-- content-center-->
+  </div><!--content-->
+  <div id="footer"> </div>
+</body>
+</html>
