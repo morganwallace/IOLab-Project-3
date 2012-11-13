@@ -64,3 +64,5 @@ var s33 = {'publication':'NY Times','date':'20121104','url':'http://www.nytimes.
 var s33 = {'publication':'NY Times','date':'20121104','url':'http://www.nytimes.com/2012/11/05/us/05iht-letter05.html','debate':'3'};
 var s34 = {'publication':'NY Times','date':'20121105','url':'http://www.nytimes.com/2012/11/06/us/politics/fivethirtyeight-factoring-the-storm-into-the-election.html','debate':'3'};
 var s34 = {'publication':'NY Times','date':'20121105','url':'http://www.nytimes.com/2012/11/06/us/politics/on-cable-news-networks-a-battle-of-bitterness.html','debate':'3'};
+var s67 = {'publication':'NY Times','date':'20121003','url':'http://www.nytimes.com/2012/10/04/us/politics/before-obama-and-romney-debate-a-review-of-key-numbers.html','debate':'1'};
+var s67 = {'publication':'NY Times','date':'20121003','url':'http://www.nytimes.com/2012/10/04/us/politics/obama-and-romneys-friendly-fire-the-tv-watch.html','debate':'1'};
