@@ -1,0 +1,10 @@
+var s1 = {'publication':'SF Gate','date': '20121003','url':'http://www.sfgate.com/politics/article/Romney-Obama-square-off-in-polite-debate-3917947.php','debate':'1'};
+var s2 = {'publication':'SF Gate','date': '20121003','url':'http://www.sfgate.com/news/article/Aggressive-Romney-spars-with-Obama-in-first-debate-3914354.php','debate':'1'};
+var s3 = {'publication':'SF Gate','date': '20121003','url':'http://www.sfgate.com/science/article/Candidates-ignore-climate-change-debate-3914294.php','debate':'1'};
+var s4 = {'publication':'SF Gate','date': '20121004','url':'http://www.sfgate.com/news/article/Romney-Victory-is-in-sight-after-first-debate-3918050.php','debate':'1'};
+var s5 = {'publication':'SF Gate','date': '20121004','url':'http://www.sfgate.com/entertainment/article/Tough-reviews-for-Jim-Lehrer-as-debate-moderator-3917905.php','debate':'1'};
+var s6 = {'publication':'NY Times','date':'20121003','url':'http://www.nytimes.com/2012/10/04/us/politics/before-obama-and-romney-debate-a-review-of-key-numbers.html','debate':'1'};
+var s7 = {'publication':'NY Times','date':'20121003','url':'http://www.nytimes.com/2012/10/04/us/politics/obama-and-romneys-friendly-fire-the-tv-watch.html','debate':'1'};
+var s8 = {'publication':'NY Times','date':'20121004','url':'http://www.nytimes.com/2012/10/05/us/politics/after-debate-a-torrent-of-criticism-for-obama.html','debate':'1'};
+var s9 = {'publication':'NY Times','date':'20121004','url':'http://www.nytimes.com/2012/10/05/us/politics/after-debate-a-torrent-of-criticism-for-obama.html','debate':'1'};
+var s10 = {'publication':'NY Times','date':'20121004','url':'http://www.nytimes.com/2012/10/05/opinion/the-first-debate-sampling-the-reviews.html','debate':'1'};
