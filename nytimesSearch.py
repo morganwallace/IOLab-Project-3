@@ -15,7 +15,11 @@ def nytimesAPIsearch(query,date):
 
 #counts the lines in the 'jsonFile' file so the JSON variable can have the correct ID
 def countInFile(jsonFile):
-    file =  open(jsonFile,"r")
+    try: file =  open(jsonFile,"r")
+    else:
+        file =  open(jsonFile,"w")
+        file.close()
+        file =  open(jsonFile,"r")
     counter = 0
     for line in file: counter +=1
     return counter
@@ -26,14 +30,8 @@ def saveJSON(JSONdata):
     jsFile.write(JSONdata+'\n')
     jsFile.close()
 
-
-
-jsonFile = "data2.js"
-newspaper = 'NY Times'
-jsonFile = "data2.js"
-jsonNo = countInFile(jsonFile)+1 #initiates a new ID for JSON entries.
-
 def main(date):
+    jsonNo = countInFile(jsonFile)+1 #initiates a new ID for JSON entries.
     #debateNo
     debateNo = "1"
     if  20121014 < date <20121021: debateNo = "2"
@@ -47,10 +45,11 @@ def main(date):
         jsonName = "var s"+str(jsonNo)+" = {'publication':'"+newspaper+"','date':'"+str(date)+"','url':'"+url+"','debate':'"+debateNo+"'};"
         saveJSON(jsonName)
 
+jsonFile = "data2.js"
+newspaper = 'NY Times'
 
 for date in range(20121003,20121004):
     main(date)#run for october dates
-    jsonNo+=1
-##for date in range(20121101,20121106):
-##    main(date)#run for November Dates
-##    jsonNo+=1
+for date in range(20121101,20121106):
+    main(date)#run for November Dates
+

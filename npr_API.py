@@ -1,5 +1,4 @@
 import urllib.request, urllib.parse
-from time import sleep
 import json
 
 def NPRsearch(query,date):
@@ -18,7 +17,11 @@ def NPRsearch(query,date):
 
 #counts the lines in the 'jsonFile' file so the JSON variable can have the correct ID
 def countInFile(jsonFile):
-    file =  open(jsonFile,"r")
+    try: file =  open(jsonFile,"r")
+    else:
+        file =  open(jsonFile,"w")
+        file.close()
+        file =  open(jsonFile,"r")
     counter = 0
     for line in file: counter +=1
     return counter
