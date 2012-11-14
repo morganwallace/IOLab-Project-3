@@ -48,9 +48,9 @@ def main(date):
         saveJSON(jsonName)
 
 
-for date in range(20121004,20121031):
+for date in range(20121003,20121004):
     main(date)#run for october dates
     jsonNo+=1
-for date in range(20121101,20121106):
-    main(date)#run for November Dates
-    jsonNo+=1
+##for date in range(20121101,20121106):
+##    main(date)#run for November Dates
+##    jsonNo+=1
