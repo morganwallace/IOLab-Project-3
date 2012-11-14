@@ -45,7 +45,7 @@
 		d3.csv("newspaper-data-about-obama-and-romney.csv", function(data) { //load the data
           var maxScore = [1]; //array of highest Score values
           var minScore = [-1];
-          var minDate = parse("20121001");
+          var minDate = parse("20121002");
           var maxDate = parse("20121106");
 
           // Add an SVG element with the desired dimensions and margins
@@ -99,11 +99,11 @@
 
           var newspapers = {"SF Gate":"sfgate",
                           "NY Times":"nyt",
-                          "NPR":"npr"
+                          "npr":"npr"
           };
           var description = {"SF Gate":"The San Francisco Chronicle is a newspaper serving primarily the San Francisco Bay Area of the U.S. state of California.",
                           "NY Times":"The New York Times is an American daily newspaper founded and continuously published in New York City since 1851.",
-                          "NPR":"A privately and publicly funded non-profit membership media organization that serves as a national syndicator to a network of 900 public radio stations in the United States."
+                          "npr":"A privately and publicly funded non-profit membership media organization that serves as a national syndicator to a network of 900 public radio stations in the United States."
           };
 		  
           //Display list of newspapers 
@@ -281,7 +281,7 @@
 			 } 
 			  //infobox 
 			  if (line.attr("stroke-dasharray") !="5.5"){ //obama
-				  d3.select("span#newspapers").html("   Obama Sentiment Score in '"+line.attr("name")+"'   ").transition(50)
+				  d3.select("span#newspapers").html("   Sentimental Score of Obama in '"+line.attr("name")+"'   ").transition(50)
 				  .style("opacity", "1")
 				  .style("background-color","#2554C7")
 				  .style("color","white");
@@ -289,7 +289,7 @@
 				  values=O_values;
 			   }
 			   else { //romney
-				  d3.select("span#newspapers").html("   Romney Sentiment Score in '"+line.attr("name")+"'   ").transition(50)
+				  d3.select("span#newspapers").html("   Sentimental Score of Romney in '"+line.attr("name")+"'   ").transition(50)
 				  .style("opacity", "1")
 				  .style("background-color","#E42217")
 				  .style("color","white");
@@ -303,22 +303,20 @@
 				.style('opacity',1)
 				.style("fill", 'white')
 				.style("stroke", function(d){return d.color})
-				.attr('r', 2.5)
+				.attr('r', 4)
 				.attr('cx', function(d) { return x(d.date) })
 				.attr('cy', function(d) { return y(d.scores)});
-
-			var text = svg.append("svg:g")
-				.attr("class", "labels")
-			    .selectAll("text")
-				.data(values)
-				.enter().append("text")
-				.style("fill", function(d){return d.color})
-				.attr('dx', function(d) { return x(d.date) })
-				.attr('dy', function(d) { return y(d.scores+0.04)})
-				.text(function(d) { return d.scores.toString().substring(0,3) })
-				.style('color',function(d){return d.color});
-
-
+			//data point text
+//			var text = svg.append("svg:g")
+//				.attr("class", "labels")
+//			    .selectAll("text")
+//				.data(values)
+//				.enter().append("text")
+//				.style("fill", function(d){return d.color})
+//				.attr('dx', function(d) { return x(d.date) })
+//				.attr('dy', function(d) { return y(d.scores+0.04)})
+//				.text(function(d) { return d.scores.toString().substring(0,3) })
+//				.style('color',function(d){return d.color});
           }
 
           function lineMouseOut(){
