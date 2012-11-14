@@ -1,16 +1,18 @@
 import urllib.request, urllib.parse
-from time import sleep
 import json
 
-def nytimesAPIsearch(query,date):
-    endDate = date+1
-    url = "http://api.nytimes.com/svc/search/v1/article?format=json&query="+query+"&begin_date="+str(date)+"&end_date="+str(endDate)+"&api-key=28e0d1a82dd11796e597dad020485930:2:66919397"
+def NPRsearch(query,date):
+    day = str(date)[-2:]
+    month = str(date)[4:-2]
+    year = str(date)[:4]
+    url = "http://api.npr.org/query?searchTerm=Obama+Romney+Presidential+Debate&meta=none&output=JSON&sort=relevance&date="+month+"%2F"+day+"%2F"+year+"&apikey=MDEwNDEzMDMxMDEzNTI4NDE5MzliNDk4MA001"
     search_response = urllib.request.urlopen(url)
     search_results = search_response.read().decode("utf8")
     results = json.loads(search_results)
     urls = []
-    for i in results['results']:
-        urls.append(i['url'])
+    for story in results['list']['story']:
+        for link in story['link']:
+            if link['type']=='html': urls.append(link["$text"])
     return urls
 
 #counts the lines in the 'jsonFile' file so the JSON variable can have the correct ID
@@ -30,26 +32,28 @@ def saveJSON(JSONdata):
     jsFile.write(JSONdata+'\n')
     jsFile.close()
 
+
+jsonFile = "data3.js"
+newspaper = 'NY Times'
+jsonNo = countInFile(jsonFile)+1 #initiates a new ID for JSON entries.
+
 def main(date):
-    jsonNo = countInFile(jsonFile)+1 #initiates a new ID for JSON entries.
-    #debateNo
+    jsonNo = countInFile(jsonFile)+1
     debateNo = "1"
     if  20121014 < date <20121021: debateNo = "2"
     elif date >= 20121021: debateNo = "3"   
-    #end debateNo
     
-    searchResults=nytimesAPIsearch("obama+romney+presidential+debate",date)[:2]
+    searchResults=NPRsearch("obama+romney+presidential+debate",date)[:2]
     print(searchResults)
 
     for url in searchResults:
         jsonName = "var s"+str(jsonNo)+" = {'publication':'"+newspaper+"','date':'"+str(date)+"','url':'"+url+"','debate':'"+debateNo+"'};"
         saveJSON(jsonName)
+        jsonNo+=1
 
-jsonFile = "data2.js"
-newspaper = 'NY Times'
 
-for date in range(20121003,20121004):
+for date in range(20121003,20121031):
     main(date)#run for october dates
+
 for date in range(20121101,20121106):
     main(date)#run for November Dates
-
