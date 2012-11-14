@@ -3,7 +3,7 @@
 
 <head>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-	<script type="text/javascript" src="data2.js"></script>
+	<script type="text/javascript" src="data3.js"></script>
 	<script type="text/javascript">
 
 	var obamaWord = encodeURI('obama');
@@ -11,8 +11,8 @@
 	var apikey = "e9c77f7fbed2e40b967e963b31c1758da8822ba9";
 	var baseUrl = "http://access.alchemyapi.com/calls/url/URLGetTargetedSentiment";
 	var callingUrl = baseUrl + '?apikey=' + apikey;
-	var allJsons = [s61, s62, s63, s64, s65, s66, s67, s68]
-	//var allJsons = [s1, s6]
+	var allJsons = [s56, s57, s58, s59, s60, s61, s62, s63, s64, s65, s66]
+	//var allJsons = [s1]
 	var Oscores = [];
 	
 	var jsonO = {};
@@ -20,7 +20,6 @@
 
 
 		$(document).ready(function() {
-
 
 
 			for (var i = 0; i < allJsons.length; i++) {
@@ -52,8 +51,11 @@
         			console.log("----------");
         			console.log(data);
         			for (var i = 0; i < allJsons.length; i++) {
-        					var weird_url0 = allJsons[i].url + '?_r=0';
-							if ((data.url === allJsons[i].url) || (data.url === weird_url0 )) {
+        					var weird_url0 = data.url + '&f=';
+        					console.log(data.url);
+        					console.log(allJsons[i].url);
+        					console.log(weird_url0)
+							if ((data.url === allJsons[i].url) || (allJsons[i].url === weird_url0 )) {
 								allJsons[i].Oscore = data.docSentiment.score;
 							}
 						}
@@ -73,8 +75,8 @@
 
 		function callRomney(data) {
         			for (var i = 0; i < allJsons.length; i++) {
-        					var weird_url = allJsons[i].url + '?_r=0';
-							if ((data.url === allJsons[i].url) || (data.url === weird_url )) {
+        					var weird_url = data.url + '&f=';
+							if ((data.url === allJsons[i].url) || (allJsons[i].url === weird_url )) {
 								allJsons[i].Rscore = data.docSentiment.score;
 							}
 						}
