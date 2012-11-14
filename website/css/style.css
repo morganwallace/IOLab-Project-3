@@ -104,10 +104,11 @@ button {
 }
 
 .infobox {
-	font-size: 20px;
-	width: 400px;
+	font-size: 24px;
+	width: 768px;
     height: 30px;
-    background-color: transparent; /*rgba(255,255,255,.85);*/
+	float:right;
+	background-color: transparent; /*rgba(255,255,255,.85);*/
     /*border: 2px solid #999;*/
     /*display:none;*/
 }

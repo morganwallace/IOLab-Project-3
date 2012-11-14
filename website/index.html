@@ -34,7 +34,7 @@
         // Scales and axes
         var x = d3.time.scale().range([0, w]),
             y = d3.scale.linear().range([h, 0]),
-            xAxis = d3.svg.axis().scale(x).tickValues([parse("20121003"),parse("20121016"),parse("20121022")]),
+            xAxis = d3.svg.axis().scale(x).tickValues([parse("20121003"),parse("20121016"),parse("20121022"),parse("20121105")]),
             yAxis = d3.svg.axis().scale(y).ticks(7).orient("left");
 
         // A line generator
@@ -43,10 +43,10 @@
             .y(function(d) { return y(d.scores); });
 
 		d3.csv("newspaper-data-about-obama-and-romney.csv", function(data) { //load the data
-          var maxScore = [10]; //array of highest Score values
-          var minScore = [-10];
+          var maxScore = [1]; //array of highest Score values
+          var minScore = [-1];
           var minDate = parse("20121001");
-          var maxDate = parse("20121023");
+          var maxDate = parse("20121106");
 
           // Add an SVG element with the desired dimensions and margins
           var svg = d3.select("#graph").append("svg:svg")
@@ -76,7 +76,7 @@
 		  rules.append("svg:g").classed("grid x_grid", true)
               .attr("transform", "translate(0,"+h+")")
               .call(
-		         d3.svg.axis().scale(x).tickValues([parse("20121003"),parse("20121016"),parse("20121022")])
+		         d3.svg.axis().scale(x).tickValues([parse("20121003"),parse("20121016"),parse("20121022"),parse("20121105")])
                 .tickSize(-h,-h,0)
                 .tickFormat("")
               )
@@ -97,15 +97,13 @@
             .style("text-anchor","middle")
             .attr("transform","translate(" + -75 + " " + h/2+") rotate(-90)");
 
-          var newspapers = {"SFgate":"sfgate",
-                          "NewYorkTimes":"newyorktimes",
-                          "Chicago Tribune":"chicago-tribune",
-                          "Los Angeles Times":"los-angeles-times",
+          var newspapers = {"SF Gate":"sfgate",
+                          "NY Times":"nyt",
+                          "NPR":"npr"
           };
-          var description = {"SFgate":"Daily newspaper for the greater San Francisco area.",
-                          "NewYorkTimes":"Breaking news, multimedia, reviews & opinion on Washington.",
-                          "Chicago Tribune":"Breaking news, sports, business, entertainment, weather and traffic for Chicago.",
-                          "Los Angeles Times":"The Los Angeles Times is a leading source of news on Southern California.",
+          var description = {"SF Gate":"The San Francisco Chronicle is a newspaper serving primarily the San Francisco Bay Area of the U.S. state of California.",
+                          "NY Times":"The New York Times is an American daily newspaper founded and continuously published in New York City since 1851.",
+                          "NPR":"A privately and publicly funded non-profit membership media organization that serves as a national syndicator to a network of 900 public radio stations in the United States."
           };
 		  
           //Display list of newspapers 
@@ -216,15 +214,14 @@
 			  var O_values =[];
 			  var R_values =[];
 			  for (var i in values){
-				 if (values[i].candidate ==="Obama" ){
+				 if (values[i].candidate ==="obama" ){
 					O_values.push(values[i]);
 				 }
-				 else if (values[i].candidate ==="Romney"){
+				 else if (values[i].candidate ==="romney"){
 					R_values.push(values[i]);
 				 }
 			  }
-			  console.log(values, O_values, R_values);
-              var maxY = d3.max(values, function(d) { return d.scores; });
+			  var maxY = d3.max(values, function(d) { return d.scores; });
 				
               // Add the line path of Obama
               svg.append("svg:path")
@@ -264,21 +261,64 @@
           function lineMouseOver(){
               d3.selectAll("path.line").transition(50).style("stroke-opacity", "0.2");
               var line = d3.select(this);
-              line.transition().style("stroke-opacity","1").style("stroke-width", 3);
-			 
-              //infobox 
+			  line.transition().style("stroke-opacity","1").style("stroke-width", 3);
+			  
+			  var values = filterNewspapers(line.attr("name"));
+              var O_values =[];
+			  var R_values =[];
+			  for (var i in values){
+				 if (values[i].candidate ==="obama" ){
+					O_values.push(values[i]);
+				 }
+				 else if (values[i].candidate ==="romney"){
+					R_values.push(values[i]);
+				 }
+			  }
+   			 //Draw Point
+			 var dataCirclesGroup = null;
+			 if (!dataCirclesGroup) {
+				dataCirclesGroup = svg.append('svg:g');
+			 } 
+			  //infobox 
 			  if (line.attr("stroke-dasharray") !="5.5"){ //obama
-				  d3.select("span#newspapers").html("Obama Sentiment Score in '"+line.attr("name")+"'").transition(50)
+				  d3.select("span#newspapers").html("   Obama Sentiment Score in '"+line.attr("name")+"'   ").transition(50)
 				  .style("opacity", "1")
-				  .style("color","#2554C7");
+				  .style("background-color","#2554C7")
+				  .style("color","white");
 				  d3.select(".infobox p").transition(50).style("opacity", "1");
+				  values=O_values;
 			   }
 			   else { //romney
-				  d3.select("span#newspapers").html("Romney Sentiment Score in '"+line.attr("name")+"'").transition(50)
+				  d3.select("span#newspapers").html("   Romney Sentiment Score in '"+line.attr("name")+"'   ").transition(50)
 				  .style("opacity", "1")
-				  .style("color","#E42217");
+				  .style("background-color","#E42217")
+				  .style("color","white");
 				  d3.select(".infobox p").transition(50).style("opacity", "1");			   
+				  values=R_values;
 			   }              
+			var circles = dataCirclesGroup.selectAll('.data-point').data(values);
+			circles.enter()
+				.append('svg:circle')
+				.attr('class', 'data-point')
+				.style('opacity',1)
+				.style("fill", 'white')
+				.style("stroke", function(d){return d.color})
+				.attr('r', 2.5)
+				.attr('cx', function(d) { return x(d.date) })
+				.attr('cy', function(d) { return y(d.scores)});
+
+			var text = svg.append("svg:g")
+				.attr("class", "labels")
+			    .selectAll("text")
+				.data(values)
+				.enter().append("text")
+				.style("fill", function(d){return d.color})
+				.attr('dx', function(d) { return x(d.date) })
+				.attr('dy', function(d) { return y(d.scores+0.04)})
+				.text(function(d) { return d.scores.toString().substring(0,3) })
+				.style('color',function(d){return d.color});
+
+
           }
 
           function lineMouseOut(){
@@ -286,6 +326,8 @@
               line.style("stroke-width", 1.5);
               d3.selectAll("path.line").transition(50).style("stroke-opacity", "1");
               d3.select(".infobox p").transition(50).style("opacity", "0");
+		      d3.selectAll('.data-point').transition(50).remove();
+		      d3.selectAll('.labels').transition(50).remove();
           }
         }); //.csv 
     });
